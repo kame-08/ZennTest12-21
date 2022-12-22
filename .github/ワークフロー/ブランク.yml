@@ -36,9 +36,15 @@ jobs:
           key: node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-
+
       - name: Install textlint
         run:  'npm install --save-dev textlint textlint-rule-preset-smarthr textlint-rule-prh textlint-filter-rule-allowlist textlint-rule-aws-spellcheck'
       
+      - name: Execute textlint for ブログ記事 or 技術同人誌
+        run: |
+          npx textlint -f checkstyle "articles/*.md" >> .textlint.log
+          npx textlint -f checkstyle "books/*/*.md" >> .textlint.log
+
       - name: Run reviewdog
         # textlintで文章上のミスがあった場合のみ、reviewdogを実行させるようにする
         if: failure()
